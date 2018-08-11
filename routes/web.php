@@ -11,29 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PageController@login');
+Route::get('/logout', 'PageController@logout');
+Route::get('/accounts/add', 'AccountsController@addUser');
+Route::get('/accounts/logs', 'AccountsController@getUserLogs');
+Route::get('/dashboard', 'PageController@dashboard');
+Route::get('/accounts/list', 'PageController@accountsList');
+Route::get('/accounts/view/{username}', 'PageController@viewProfile');
+Route::get('/files/upload', 'FilesController@setUpload');
+Route::get('/files/search', 'FilesController@getSearchPage');
+Route::get('/files/view/{fileset}', 'FilesController@viewFileSet');
 
-/*
-|--------------------------------------------------------------------------
-| Readiness Probe
-|--------------------------------------------------------------------------
-|
-| A readiness probe determines if a container is ready to service requests.
-| If the readiness probe fails a container, the endpoints controller ensures
-| the container has its IP address removed from the endpoints of all services.
-| A readiness probe can be used to signal to the endpoints controller that
-| even though a container is running, it should not receive any traffic
-| from a proxy. Set a readiness check by configuring the
-| template.spec.containers.readinessprobe stanza of a pod configuration.
-|
-*/
-Route::get('health.php', function () {
-    try {
-        \DB::connection()->getPdo();
-        return 'OK';
-    } catch (\Exception $e) {
-        abort(500, "Connection failed: " . $e->getMessage());
-    }
-});
+Route::post('/login', 'PageController@attempt');
+Route::post('/accounts/add', 'AccountsController@create');
+Route::post('/files/upload', 'FilesController@uploadFiles');
+Route::post('/files/search', 'FilesController@runSearch');
